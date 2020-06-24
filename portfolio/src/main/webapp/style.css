@@ -4,6 +4,60 @@
   width: 650px;
 }
 
+.headerBox {
+    background-color: pink;
+    border: 5px dotted magenta;
+    text-align: center;
+}
+
+#factBox {
+    float: left;
+    width: 300px;
+    height: 150px;
+    background-color: teal;
+    border: 5px white;
+    text-align: center;
+    margin-left: 50px;
+    margin-bottom: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#dogBox {
+    float: left;
+    width: 300px; 
+    height: 150px;
+    background-color: teal;
+    border: 5px white;
+    text-align: center;
+    margin-left: 175px;
+    margin-bottom: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#newsBox {
+    float: right;
+    width: 300px;
+    height: 150px;
+    background-color: teal;
+    border: 5px white;
+    text-align: center;
+    margin-right: 50px;
+    margin-bottom: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
 #greeting-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#random-image-container img {
   margin-top: 20px;
+  margin-bottom: 20px;
+  width: 450px;
+  height: 600px;
 }
