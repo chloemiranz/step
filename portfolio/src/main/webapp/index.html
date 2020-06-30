@@ -3,39 +3,57 @@
   <head>
     <meta charset="UTF-8">
     <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" type="text/css">
     <script src="script.js"></script>
   </head>
   <body>
     <div id="content">
-        <div class = "headerBox"
-        <h1>Chloe's Portfolio</h1>
-        <p>This is my new portfolio.</p>
+        <div class = "headerBox">
+            <h1> Chloe's Portfolio </h1>
+        <p> This is my new portfolio.</p>
         <img src="images/IMG_7350.jpeg" alt="Picture of me" width = "200" length = "300">
         <p>I am a sophomore at UC Santa Cruz and I live in Palo Alto.<p>
         <p>Here is a link to my github: </p>
         <a href="https://github.com/chloemiranz">Github</a>
         <p>Here is a link to my Linkedin: </p>
         <a href="www.linkedin.com/in/chloe-miranz-bb0806102">Linkedin</a>
+        <p>Click here to see a quote:</p>
+        <button onclick="getDataUsingArrowFunctions()">Fetch a quote!</button>
+        <div id="data-container"></div>
 
         </div>
-    <br>
     </div>
-        <div id = "factBox" 
-        <p>Click here to get a random fact about me:</p>
-        <button onclick="addRandomGreeting()">Here</button>
-        <div id="greeting-container"></div>
-        </div>
-        <div id = "dogBox"
-        <p>Click here to see a random photo of my dog:</p>
-        <button onclick="randomizeImage()">Here</button>
-        <div id="random-image-container"></div>
-        </div>
-        <div id = "newsBox"
-        <p>Click here to get a random news headline from today:</p>
-        <button onclick="addRandomGreeting()">Here</button>
-        <div id="greeting-container"></div>
-        </div>
+    <br>
+    <br>
+    <div id = "factBox">
+    <p1>Click here to get a random fact about me:</p1>
+    <button class = "button" onclick="addRandomGreeting()">Here</button>
+    <div id="greeting-container"></div>
+    </div>
+
+    <div id = "dogBox">
+    <p1>Click here to see a random photo of my dog:</p1>
+    <button class = "button" onclick="randomizeImage();document.getElementById('dogBox').style.height = 'auto';">Here</button>
+    <div id="random-image-container"></div>
+    </div>
+
+    <div id = "songBox">
+    <p1>Click here to hear a snippet of one of my favorite songs:</p1>
+    <button class = "button" onclick="showFrame();document.getElementById('songBox').style.height = 'auto';">Here</button>
+    <div id = "showiFrame" </div>
+    </div>
+
+    <h1 id="Comments: "></h1>
+
+    <form action="/data" method="POST">
+
+      <p>Enter a comment:</p>
+      <textarea name="text-input">comment</textarea>
+      <br/>
+
+      <input type="submit" />
+    </form>
+
        
     
   </body>
