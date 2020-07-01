@@ -56,22 +56,6 @@ function getDataUsingArrowFunctions() {
   });
 }
 
-/*function getData() {
-    fetch('/data').then(response => response.json()).then((data) => {
-    // stats is an object, not a string, so we have to
-    // reference its fields to create HTML content
-
-    const dataElements = document.getElementById('data-container');
-    statsListElement.innerHTML = '';
-    statsListElement.appendChild(
-        createListElement('Element 1: ' + data.get(0)));
-    statsListElement.appendChild(
-        createListElement('Element 2: ' + data.get(1)));
-    statsListElement.appendChild(
-        createListElement('Element 3: ' + data.get(2)));
-  });
-}*/
-
 
 /** Creates an <li> element containing text. */
 function createListElement(text) {

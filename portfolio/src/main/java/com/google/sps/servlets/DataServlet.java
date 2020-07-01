@@ -38,7 +38,6 @@ public class DataServlet extends HttpServlet {
     listData.add("How are you?");
     listData.add("Great weather today!");
 
-    //converting data to JSON
     String json = convertToJson(listData);
     
     // Send the JSON as the response
@@ -49,12 +48,10 @@ public class DataServlet extends HttpServlet {
 
   private String convertToJson(ArrayList<String> data) {
     String json = "";
-    json += data.get(0);
-    json += ", ";
-    json += data.get(1);
-    json += ", ";
-    json += data.get(2);
-    json += "";
+    for (int i = 0; i < data.size(); i ++>){
+        json += data.get(i);
+        json += ", ";
+    }
     return json;
   }
 
@@ -69,15 +66,9 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(taskEntity);
 
-    // Break the text into individual words.
-    //String[] words = text.split("\\s*,\\s*");
-
     // Respond with the result.
     response.setContentType("text/html;");
-    //response.getWriter().println(Arrays.toString(words));
     response.getWriter().println(text);
-
-    //response.sendRedirect("/index.html");
   }
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
