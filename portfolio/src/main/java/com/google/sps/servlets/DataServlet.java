@@ -11,10 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+ 
 package com.google.sps.servlets;
 
+import static java.util.Objects.isNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -24,59 +33,73 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*; 
 
+ 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-
-    private final ArrayList<String> listData = new ArrayList<String>();
-    private final ArrayList<String> comments = new ArrayList<String>();
-
+ 
+    //private ArrayList<String> comments = new ArrayList<String>();
+    String json;
+    String prettyJson;
+ 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-   
-    listData.add("Hello!"); 
-    listData.add("How are you?");
-    listData.add("Great weather today!");
 
-    String json = convertToJson(listData);
-    
-    // Send the JSON as the response
-    response.setContentType("application/json;");
-    response.getWriter().println(json);
+    Query query = new Query("Task").addSort("comment", SortDirection.DESCENDING);
 
-  }
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
 
-  private String convertToJson(ArrayList<String> data) {
-    String json = "";
-    for (int i = 0; i < data.size(); i ++>){
-        json += data.get(i);
-        json += ", ";
+    List<String> tasks = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+
+      Object property = new Object();
+      if (!isNull(entity.getProperty("comment"))){
+          property = entity.getProperty("comment");
+      }
+      else{
+          property = "";
+      }
+      String comment = property.toString();
+
+      //String hi = (String) entity.getProperty("comment");
+      tasks.add(comment); 
     }
-    return json;
-  }
 
+    Gson gson = new Gson();
+
+    response.setContentType("application/json;");
+    response.getWriter().println(gson.toJson(tasks));
+  }
+ 
+ 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form.
-    String text = getParameter(request, "text-input", "");
-    comments.add(text); 
+
+    String comment = (String) request.getParameter("text-input");
 
     Entity taskEntity = new Entity("Task");
-    taskEntity.setProperty("comment", text);
+    taskEntity.setProperty("comment", convertToJson(comment)); 
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(taskEntity);
-
-    // Respond with the result.
-    response.setContentType("text/html;");
-    response.getWriter().println(text);
+ 
+    response.sendRedirect("/index.html"); 
+  }
+ 
+ 
+  private String convertToJsonUsingGson(ArrayList<String> data) {
+    Gson gson = new Gson();
+    String json = gson.toJson(data);
+    return json;
   }
 
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
+   private String convertToJson(String data) {
+    Gson gson = new Gson();
+    String json = gson.toJson(data);
+    return json;
   }
-
+ 
 }
+ 
+
