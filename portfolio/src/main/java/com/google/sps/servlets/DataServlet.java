@@ -15,62 +15,51 @@
 package com.google.sps.servlets;
 
 import static java.util.Objects.isNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.io.IOException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.*; 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*; 
 
  
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
  
-    //private ArrayList<String> comments = new ArrayList<String>();
-    String json;
-    String prettyJson;
- 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    Query query = new Query("Task").addSort("comment", SortDirection.DESCENDING);
+    Query query = new Query("Comment").addSort("comment", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    List<String> tasks = new ArrayList<>();
+    List<String> comments = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
 
-      Object property = new Object();
-      if (!isNull(entity.getProperty("comment"))){
-          property = entity.getProperty("comment");
-      }
-      else{
-          property = "";
-      }
-      String comment = property.toString();
+      String comment = (String) entity.getProperty("comment");
 
-      //String hi = (String) entity.getProperty("comment");
-      tasks.add(comment); 
+      comments.add(comment); 
     }
 
     Gson gson = new Gson();
 
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(tasks));
+    response.getWriter().println(gson.toJson(comments));
   }
  
  
@@ -78,26 +67,13 @@ public class DataServlet extends HttpServlet {
 
     String comment = (String) request.getParameter("text-input");
 
-    Entity taskEntity = new Entity("Task");
-    taskEntity.setProperty("comment", convertToJson(comment)); 
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("comment", comment); 
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(taskEntity);
+    datastore.put(commentEntity);
  
     response.sendRedirect("/index.html"); 
-  }
- 
- 
-  private String convertToJsonUsingGson(ArrayList<String> data) {
-    Gson gson = new Gson();
-    String json = gson.toJson(data);
-    return json;
-  }
-
-   private String convertToJson(String data) {
-    Gson gson = new Gson();
-    String json = gson.toJson(data);
-    return json;
   }
  
 }
