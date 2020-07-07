@@ -41,13 +41,13 @@ function showFrame() {
     document.getElementById("showiFrame").innerHTML = "<iframe src=\"https://open.spotify.com/embed/track/1bSpwPhAxZwlR2enJJsv7U\" width=\"300\" height=\"380\" frameborder=\"0\" allowtransparency=\"true\" allow=\"encrypted-media\" ></iframe>";
 }
 
-function getData() {
-  fetch('/data').then(response => response.json()).then((data) => {
+function getComments() {
+  fetch('/data').then(response => response.json()).then((comments) => {
 
-    const comments = document.getElementById('comments-container');
-    comments.innerHTML = '';
-    for (x in data) {
-        comments.append(createListElement(data[x]));
+    const commentsList = document.getElementById('comments-container');
+    commentsList.innerHTML = '';
+    for (x in comments) {
+        commentsList.append(createListElement(comments[x]));
     }
     });
 }
