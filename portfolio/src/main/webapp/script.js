@@ -42,23 +42,29 @@ function showFrame() {
 }
 
 function getComments() {
-  fetch('/data').then(response => response.json()).then((comments) => {
+    fetch('/login').then(response => response.text()).then((message) => {
+        if (message = "You are logged in!"){
+            document.getElementById('commentBox').hidden = false;
+            fetch('/data').then(response => response.json()).then((comments) => {
+            const commentsList = document.getElementById('comments-container');
+            commentsList.innerHTML = '';
+            for (var i = 0; i < comments.length; i+=2) {
+                //concat email string and comment string
+                var s = comments[i].concat(": \n", comments[i+1]);
+                commentsList.append(createListElement(s));            }
+            });
+        }
+    });
+}
 
-    const commentsList = document.getElementById('comments-container');
-    commentsList.innerHTML = '';
-    for (x in comments) {
-        commentsList.append(createListElement(comments[x]));
-    }
+function getLogin() {
+  fetch('/login').then(response => response.text()).then((message) => {
+    const login = document.getElementById('loginBox');
+    login.append(message);
     });
 }
 
 function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
-}
- 
- function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css" type="text/css">
     <script src="script.js"></script>
   </head>
-  <body onload="getComments()">
+  <body>
     <div id="content">
         <div class = "headerBox">
             <h1> Chloe's Portfolio </h1>
@@ -38,14 +38,28 @@
     </div>
     <br>
     <br>
-    <div id = "commentBox" >
+    <div id = "loginBox" >
+        <br>
+        <script>
+            getLogin();
+        </script> 
+    </div>  
+    <br>
+    <br>
+    <div id = "commentBox" hidden>
         <form action="/data" method="POST">
- 
+            <script>
+                getComments();
+            </script>
+            <p>Enter your email address:</p>
+            <textarea name="email-input">Email</textarea>
+            <br>
             <p>Enter a comment:</p>
             <textarea name="text-input">comment</textarea>
             <br>
             <input type= "submit" />
             <ul id="comments-container"></ul>
         </form>
+    </div>
   </body>
 </html>
