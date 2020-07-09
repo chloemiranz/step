@@ -6,6 +6,15 @@
     "html-validate:recommended"
   ],
   "rules": {
-    "void-style": "off"
+    "void-style": "off",
+    "wcag/h37": "off",
+    "wcag/h30": "off",
+    "element-required-attributes": "off",
+    "no-implicit-close": "off",
+    "element-name": "off",
+    "parser-error": "off"
+
   }
+
+  
 }
