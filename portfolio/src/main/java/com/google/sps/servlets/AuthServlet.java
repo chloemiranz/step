@@ -10,18 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/login")
 public class AuthServlet extends HttpServlet {
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html");
-
     UserService userService = UserServiceFactory.getUserService();
+
     if (userService.isUserLoggedIn()) {
       response.getWriter().println("You are logged in!");
+      String logoutUrl = userService.createLogoutURL("/index.html");
+      response.getWriter().println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
     } else {
-      response.getWriter().println("You are not logged in :(");  
-      String urlToRedirectToAfterUserLogsIn = "/index.html";  
-      String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+      response.getWriter().println("You are not logged in :(");
+      String loginUrl = userService.createLoginURL("/index.html");
       response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
     }
   }

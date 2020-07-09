@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
- 
+
 package com.google.sps.servlets;
 
 import static java.util.Objects.isNull;
@@ -34,14 +34,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
- 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
- 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
     Query query = new Query("Comment").addSort("comment", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -54,30 +51,25 @@ public class DataServlet extends HttpServlet {
       String email = (String) entity.getProperty("email");
 
       data.add(email);
-      data.add(comment); 
+      data.add(comment);
     }
 
     Gson gson = new Gson();
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(data));
   }
- 
- 
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String email = (String) request.getParameter("email-input");
     String comment = (String) request.getParameter("text-input");
 
     Entity entity = new Entity("Comment");
-    entity.setProperty("comment", comment); 
-    entity.setProperty("email", email); 
+    entity.setProperty("comment", comment);
+    entity.setProperty("email", email);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(entity);
- 
-    response.sendRedirect("/index.html"); 
-  }
- 
-}
- 
 
+    response.sendRedirect("/index.html");
+  }
+}
