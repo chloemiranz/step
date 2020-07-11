@@ -1,0 +1,16 @@
+{
+  "elements": [
+    "html5"
+  ],
+  "extends": [
+    "html-validate:recommended"
+  ],
+  "rules": {
+    "void-style": "off",
+    "element-name": "off",
+    "attribute-allowed-values": "off",
+    "no-unused-vars": "off"
+  }
+
+  
+}
