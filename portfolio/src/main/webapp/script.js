@@ -90,3 +90,17 @@ function createListElement(text) {
   liElement.innerText = text;
   return liElement;
 }
+
+function fetchBlobstoreUrlAndShowForm() {
+  fetch('/blobstore')
+      .then((response) => {
+        return response.text();
+      })
+      .then((imageUploadUrl) => {
+        const messageForm = document.getElementById('my-form');
+        messageForm.action = imageUploadUrl;
+        messageForm.classList.remove('hidden');
+      });
+}
+
+
