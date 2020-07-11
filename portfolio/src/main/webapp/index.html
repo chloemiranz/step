@@ -1,65 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="style.css" type="text/css" />
     <script src="script.js"></script>
   </head>
   <body>
     <div id="content">
-        <div class = "headerBox">
-            <h1> Chloe's Portfolio </h1>
-        <p> This is my new portfolio.</p>
-        <img src="images/IMG_7350.jpeg" alt="Picture of me" width = "200" length = "300">
-        <p>I am a sophomore at UC Santa Cruz and I live in Palo Alto.<p>
-        <p>Here is a link to my github: </p>
+      <div class="headerBox">
+        <h1>Chloe's Portfolio</h1>
+        <p>This is my new portfolio.</p>
+        <img src="images/IMG_me.jpeg" alt="Picture of me" width="200" length="300" />
+        <p>I am a sophomore at UC Santa Cruz and I live in Palo Alto.</p>
+        <p></p>
+        <p>Here is a link to my github:</p>
         <a href="https://github.com/chloemiranz">Github</a>
-        <p>Here is a link to my Linkedin: </p>
+        <p>Here is a link to my Linkedin:</p>
         <a href="www.linkedin.com/in/chloe-miranz-bb0806102">Linkedin</a>
-        </div>
+      </div>
     </div>
-    <br>
-    <br>
-    <div id = "factBox">
-    <p1>Click here to get a random fact about me:</p1>
-    <button class = "button" onclick="addRandomGreeting()">Here</button>
-    <div id="greeting-container"></div>
+    <br />
+    <br />
+    <div id="factBox" class="infoBox">
+      <p1>Click here to get a random fact about me:</p1>
+      <button class="button" type = "submit" onclick="addRandomGreeting();">Here</button>
+      <div id="greeting-container"></div>
     </div>
-    <div id = "dogBox">
-    <p1>Click here to see a random photo of my dog:</p1>
-    <button class = "button" onclick="randomizeImage();document.getElementById('dogBox').style.height = 'auto';">Here</button>
-    <div id="random-image-container"></div>
+    <div id="dogBox" class="infoBox">
+      <p1>Click here to see a random photo of my dog:</p1>
+      <button class="button" type = "submit" onclick="randomizeImage();document.getElementById('dogBox').style.height = 'auto';">
+        Here
+      </button>
+      <div id="random-image-container"></div>
     </div>
-    <div id = "songBox">
-    <p1>Click here to hear a snippet of one of my favorite songs:</p1>
-    <button class = "button" onclick="showFrame();document.getElementById('songBox').style.height = 'auto';">Here</button>
-    <div id = "showiFrame" </div>
+    <div id="songBox" class="infoBox">
+      <p1>Click here to hear a snippet of one of my favorite songs:</p1>
+      <button class="button" type = "submit"  onclick="showFrame();document.getElementById('songBox').style.height = 'auto';">
+        Here
+      </button>
+      <div id="showiFrame"></div>
     </div>
-    <br>
-    <br>
-    <div id = "loginBox" >
-        <br>
+    <div id="loginBox">
+      <br />
+      <script>
+        getLogin()
+      </script>
+    </div>
+    <div id="commentBox">
+      <form action="/data" method="POST">
+        <p>Enter your email:</p>
+        <textarea name="email-input">Email</textarea>
+        <br />
+        <p>Enter the maximum number of comments you want to show:</p>
+        <select name="numbers" id="max" onchange="getComments()">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="all">all</option>
+        </select>
+        <br />
+        <p>Enter a comment:</p>
+        <textarea name="text-input">comment</textarea>
+        <br />
+        <button type="submit" ></button>
+        <ul id="comments-container"></ul>
         <script>
-            getLogin();
-        </script> 
-    </div>  
-    <br>
-    <br>
-    <div id = "commentBox" hidden>
-        <form action="/data" method="POST">
-            <script>
-                getComments();
-            </script>
-            <p>Enter your email address:</p>
-            <textarea name="email-input">Email</textarea>
-            <br>
-            <p>Enter a comment:</p>
-            <textarea name="text-input">comment</textarea>
-            <br>
-            <input type= "submit" />
-            <ul id="comments-container"></ul>
-        </form>
+          getComments()
+        </script>
+      </form>
     </div>
   </body>
 </html>

@@ -15,7 +15,7 @@
 function addRandomGreeting() {
   const greetings = [
     'I am 20 years old', 'My first language is French', 'I have a sister',
-    'My favorite band is Pink Floyd', 'I am half Persian'
+    'My favorite band is Pink Floyd', 'I am half Persian',
   ];
 
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -32,7 +32,7 @@ function randomizeImage() {
   const imgElement = document.createElement('img');
   imgElement.src = imgUrl;
 
-  var imageContainer = document.getElementById('random-image-container');
+  const imageContainer = document.getElementById('random-image-container');
 
   imageContainer.innerHTML = '';
   imageContainer.appendChild(imgElement);
@@ -44,26 +44,39 @@ function showFrame() {
 }
 
 function getComments() {
-  fetch('/login').then(response => response.text()).then((message) => {
-    if (message = 'You are logged in!') {
-      document.getElementById('commentBox').hidden = false;
-      fetch('/data').then(response => response.json()).then((comments) => {
+  fetch('/login').then((response) => response.text()).then((message) => {
+    const firstLine = message.split('\n')[0];
+    if (firstLine == 'You are logged in!') {
+      document.getElementById('commentBox').classList.add('show');
+      document.getElementById('commentBox').classList.remove('hide');
+
+      fetch('/data').then((response) => response.json()).then((comments) => {
         const commentsList = document.getElementById('comments-container');
         commentsList.innerHTML = '';
-        for (var i = 0; i < comments.length; i += 2) {
-          // concat email string and comment string
-          var s = comments[i].concat(': \n', comments[i + 1]);
-          commentsList.append(createListElement(s));
+        const maxInput = document.getElementById('max').value;
+        console.log('maxInput: ', maxInput);
+        const paramInput = 'max='.concat(maxInput);
+        console.log(paramInput);
+        const params = new URLSearchParams(paramInput);
+        let max = params.get('max');
+        if (max == 'all') {
+          max = (comments.length);
+        }
+        console.log(comments);
+        for (let i = 0; i < comments.length; i++) {
+          const commentObj = comments[i].email + ': \n' + comments[i].comment;
+          commentsList.append(createListElement(commentObj));
         }
       });
     } else {
-      document.getElementById('commentBox').hidden = true;
+      document.getElementById('commentBox').classList.add('hide');
+      document.getElementById('commentBox').classList.remove('show');
     }
   });
 }
 
 function getLogin() {
-  fetch('/login').then(response => response.text()).then((message) => {
+  fetch('/login').then((response) => response.text()).then((message) => {
     const login = document.getElementById('loginBox');
     login.innerHTML = message;
   });

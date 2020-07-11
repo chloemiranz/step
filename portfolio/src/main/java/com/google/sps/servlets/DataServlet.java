@@ -19,12 +19,14 @@ import static java.util.Objects.isNull;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.google.sps.comments.Comment;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -44,19 +46,29 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery commentResults = datastore.prepare(query);
 
-    List<String> data = new ArrayList<>();
-    for (Entity entity : commentResults.asIterable()) {
-      long id = entity.getKey().getId();
-      String comment = (String) entity.getProperty("comment");
-      String email = (String) entity.getProperty("email");
+    List<Comment> data = new ArrayList<>();
 
-      data.add(email);
-      data.add(comment);
-    }
+    /*for (Entity entity : commentResults.asList(FetchOptions.Builder.withDefaults())) {
+        long id = entity.getKey().getId();
+        String comment = (String) entity.getProperty("comment");
+        String email = (String) entity.getProperty("email");
+
+        Comment commentObj = new Comment(email, comment);
+        data.add(commentObj);
+
+    }*/
+
+    Comment example = new Comment("hi", "hello");
+
+    data.add(example);
 
     Gson gson = new Gson();
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(data));
+
+    /*String i = toJsonString(data);
+    response.setContentType("application/json; charset=utf=8");
+    response.getWriter().println(i);*/
   }
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -71,5 +83,9 @@ public class DataServlet extends HttpServlet {
     datastore.put(entity);
 
     response.sendRedirect("/index.html");
+  }
+
+  private static String toJsonString(List<Comment> data) {
+    return new Gson().toJson(data);
   }
 }
