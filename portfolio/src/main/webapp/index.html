@@ -24,19 +24,27 @@
     <br />
     <div id="factBox" class="infoBox">
       <p1>Click here to get a random fact about me:</p1>
-      <button class="button" type = "submit" onclick="addRandomGreeting();">Here</button>
+      <button class="button" type="submit" onclick="addRandomGreeting();">Here</button>
       <div id="greeting-container"></div>
     </div>
     <div id="dogBox" class="infoBox">
       <p1>Click here to see a random photo of my dog:</p1>
-      <button class="button" type = "submit" onclick="randomizeImage();document.getElementById('dogBox').style.height = 'auto';">
+      <button
+        class="button"
+        type="submit"
+        onclick="randomizeImage();document.getElementById('dogBox').style.height = 'auto';"
+      >
         Here
       </button>
       <div id="random-image-container"></div>
     </div>
     <div id="songBox" class="infoBox">
       <p1>Click here to hear a snippet of one of my favorite songs:</p1>
-      <button class="button" type = "submit"  onclick="showFrame();document.getElementById('songBox').style.height = 'auto';">
+      <button
+        class="button"
+        type="submit"
+        onclick="showFrame();document.getElementById('songBox').style.height = 'auto';"
+      >
         Here
       </button>
       <div id="showiFrame"></div>
@@ -64,7 +72,7 @@
         <p>Enter a comment:</p>
         <textarea name="text-input">comment</textarea>
         <br />
-        <button type="submit" ></button>
+        <button type="submit"></button>
         <ul id="comments-container"></ul>
         <script>
           getComments()

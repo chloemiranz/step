@@ -14,8 +14,11 @@
 
 function addRandomGreeting() {
   const greetings = [
-    'I am 20 years old', 'My first language is French', 'I have a sister',
-    'My favorite band is Pink Floyd', 'I am half Persian',
+    'I am 20 years old',
+    'My first language is French',
+    'I have a sister',
+    'My favorite band is Pink Floyd',
+    'I am half Persian',
   ];
 
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -54,7 +57,7 @@ function getComments() {
         const commentsList = document.getElementById('comments-container');
         commentsList.innerHTML = '';
         const maxInput = document.getElementById('max').value;
-        console.log('maxInput: ', maxInput);
+        console.log('maxInput: ', maxInput); 
         const paramInput = 'max='.concat(maxInput);
         console.log(paramInput);
         const params = new URLSearchParams(paramInput);
