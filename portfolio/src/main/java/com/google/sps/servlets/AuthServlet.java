@@ -19,18 +19,14 @@ public class AuthServlet extends HttpServlet {
 
     if (userService.isUserLoggedIn()) {
       bool = "true";
-      response.getWriter().println("You are logged in!");
+      response.getWriter().println("You are logged in! ");
       String logoutUrl = userService.createLogoutURL("/index.html");
-      response.getWriter().println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
+      response.getWriter().println("<span>Logout <a href=\"" + logoutUrl + "\">here</a>.</span>");
     } else {
       bool = "false";
-      response.getWriter().println("You are not logged in :(");
+      response.getWriter().println("You are not logged in :( ");
       String loginUrl = userService.createLoginURL("/index.html");
-      response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+      response.getWriter().println("<span>Login <a href=\"" + loginUrl + "\">here</a>.</span>");
     }
-
-    /*Gson gson = new Gson();
-    response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(bool));*/
   }
 }

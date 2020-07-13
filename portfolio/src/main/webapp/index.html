@@ -2,97 +2,109 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>My Portfolio</title>
+    <title>Chloe Miranz</title>
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script src="script.js"></script>
   </head>
   <body>
-    <div id="content">
-      <div class="headerBox">
-        <h1>Chloe's Portfolio</h1>
-        <p>This is my new portfolio.</p>
-        <img src="images/IMG_me.jpeg" alt="Picture of me" width="200" length="300" />
-        <p>I am a sophomore at UC Santa Cruz and I live in Palo Alto.</p>
-        <p></p>
-        <p>Here is a link to my github:</p>
-        <a href="https://github.com/chloemiranz">Github</a>
-        <p>Here is a link to my Linkedin:</p>
-        <a href="www.linkedin.com/in/chloe-miranz-bb0806102">Linkedin</a>
-      </div>
-    </div>
-    <br />
-    <br />
-    <div id="factBox" class="infoBox">
-      <p1>Click here to get a random fact about me:</p1>
-      <button class="button" type="submit" onclick="addRandomGreeting();">Here</button>
-      <div id="greeting-container"></div>
-    </div>
-    <div id="dogBox" class="infoBox">
-      <p1>Click here to see a random photo of my dog:</p1>
-      <button
-        class="button"
-        type="submit"
-        onclick="randomizeImage();document.getElementById('dogBox').style.height = 'auto';"
-      >
-        Here
-      </button>
-      <div id="random-image-container"></div>
-    </div>
-    <div id="songBox" class="infoBox">
-      <p1>Click here to hear a snippet of one of my favorite songs:</p1>
-      <button
-        class="button"
-        type="submit"
-        onclick="showFrame();document.getElementById('songBox').style.height = 'auto';"
-      >
-        Here
-      </button>
-      <div id="showiFrame"></div>
-    </div>
+    <!-- <div class="headerBox-1">
+      <h1>Chloe's Portfolio</h1>
+      <p>This is my new portfolio.</p>
+      <img src="images/IMG_me.jpeg" alt="Picture of me" width="200" length="300" />
+      <p>I am a sophomore at UC Santa Cruz and I live in Palo Alto.</p>
+      <p></p>
+      <p>Here is a link to my github:</p>
+      <a href="https://github.com/chloemiranz">Github</a>
+      <p>Here is a link to my Linkedin:</p>
+      <a href="https://www.linkedin.com/in/chloe-miranz-bb0806102">Linkedin</a>
+    </div> -->
     <div id="loginBox">
       <br />
       <script>
         getLogin()
       </script>
     </div>
+    <div class="headerBox">
+      <div class="information">
+        <h1>Chloe <span class="pinkText">Miranz</span></h1>
+        <div class="subheader">
+          I am a sophomore at UC Santa Cruz and I live in Palo Alto. Lorem ipsum dolor sit amet, consectetur adipiscing
+          elit. Nunc ut nibh eu velit tempus interdum. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+          Duis turpis erat, pellentesque scelerisque felis vel, hendrerit fringilla dolor.
+        </div>
+        <div class="links">
+          <a href="https://github.com/chloemiranz">Github</a>
+          <a href="https://www.linkedin.com/in/chloe-miranz-bb0806102">Linkedin</a>
+        </div>
+      </div>
+      <img src="images/IMG_me.jpeg" alt="Picture of me" class="profilePic" />
+    </div>
+    <br />
+    <br />
+    <div id="infoSection">
+      <div class="infoSectionText">Some things about me</div>
+      <div class="infoBoxes">
+        <div id="factBox" class="infoBox">
+          <p1>Click here to get a random fact about me:</p1>
+          <br />
+          <button class="button" type="submit" onclick="addRandomGreeting();">Here</button>
+          <div id="greeting-container"></div>
+        </div>
+        <div id="dogBox" class="infoBox">
+          <p1>Click here to see a random photo of my dog:</p1>
+          <br />
+          <button
+            class="button"
+            type="submit"
+            onclick="randomizeImage();document.getElementById('dogBox').style.height = 'auto';"
+          >
+            Here
+          </button>
+          <div id="random-image-container"></div>
+        </div>
+        <div id="songBox" class="infoBox">
+          <p1>Click here to hear a snippet of one of my favorite songs:</p1>
+          <br />
+          <button
+            class="button"
+            type="submit"
+            onclick="showFrame();document.getElementById('songBox').style.height = 'auto';"
+          >
+            Here
+          </button>
+          <div id="showiFrame"></div>
+        </div>
+      </div>
+    </div>
     <div id="commentBox">
-      <form action="/data" method="POST">
+      <div class="commentBoxText">Comments</div>
+      <form id="my-form" class="hidden" method="POST" enctype="multipart/form-data">
         <p>Enter your email:</p>
         <textarea name="email-input">Email</textarea>
         <br />
         <p>Enter the maximum number of comments you want to show:</p>
         <select name="numbers" id="max" onchange="getComments()">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
           <option value="all">all</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
         </select>
         <br />
         <p>Enter a comment:</p>
         <textarea name="text-input">comment</textarea>
         <br />
-        <button type="submit"></button>
-        <ul id="comments-container"></ul>
+        <p>Upload an image:</p>
+        <input type="file" name="image" />
+        <button type="submit">Submit</button>
+        <div class="commentsScrollBox">
+          <ul id="comments-container"></ul>
+        </div>
         <script>
           getComments()
-        </script>
-      </form>
-    </div>
-    <div id="BlobstoreFetch" >
-        <script>
           fetchBlobstoreUrlAndShowForm()
         </script>
-        <p>Type a message and click submit:</p>
-        <form id="my-form" class="hidden" method="POST" enctype="multipart/form-data">
-            <p>Type some text:</p>
-            <textarea name="message"></textarea>
-            <br/>
-            <p>Upload an image:</p>
-            <input type="file" name="image">
-            <br/><br/>
-            <button>Submit</button>
-        </form>
+      </form>
     </div>
   </body>
 </html>

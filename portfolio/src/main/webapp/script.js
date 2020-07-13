@@ -43,13 +43,13 @@ function randomizeImage() {
 
 function showFrame() {
   document.getElementById('showiFrame').innerHTML =
-      '<iframe src="https://open.spotify.com/embed/track/1bSpwPhAxZwlR2enJJsv7U" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media" ></iframe>';
+      '<iframe src="https://open.spotify.com/embed/track/1bSpwPhAxZwlR2enJJsv7U" width="100%" height="300px" frameborder="0" allowtransparency="true" allow="encrypted-media" ></iframe>';
 }
 
 function getComments() {
   fetch('/login').then((response) => response.text()).then((message) => {
     const firstLine = message.split('\n')[0];
-    if (firstLine == 'You are logged in!') {
+    if (firstLine == 'You are logged in! ') {
       document.getElementById('commentBox').classList.add('show');
       document.getElementById('commentBox').classList.remove('hide');
 
@@ -57,7 +57,7 @@ function getComments() {
         const commentsList = document.getElementById('comments-container');
         commentsList.innerHTML = '';
         const maxInput = document.getElementById('max').value;
-        console.log('maxInput: ', maxInput); 
+        console.log('maxInput: ', maxInput);
         const paramInput = 'max='.concat(maxInput);
         console.log(paramInput);
         const params = new URLSearchParams(paramInput);
@@ -65,11 +65,25 @@ function getComments() {
         if (max == 'all') {
           max = (comments.length);
         }
-        console.log(comments);
-        for (let i = 0; i < comments.length; i++) {
-          const commentObj = comments[i].email + ': \n' + comments[i].comment;
-          commentsList.append(createListElement(commentObj));
+
+        let fetches = []
+
+            for (let i = 0; i < max; i++) {
+          if (comments[i].hasOwnProperty('blobKey') &&
+              comments[i].blobKey !== 'noBlob') {
+            fetches.push(fetch('/getBlob?blobKey=' + comments[i].blobKey)
+                             .then((imgBlob) => {
+                               comments[i].url = imgBlob.url;
+                             }));
+          }
         }
+
+        Promise.all(fetches).then(() => {
+          for (let i = 0; i < max; i++) {
+            console.log(comments[i])
+            commentsList.append(createCommentElement(comments[i]));
+          }
+        })
       });
     } else {
       document.getElementById('commentBox').classList.add('hide');
@@ -78,17 +92,44 @@ function getComments() {
   });
 }
 
+function createCommentElement(comment) {
+  let commentElement = document.createElement('li');
+  let emailCommentDiv = document.createElement('div');
+  let emailSpan = document.createElement('span');
+  let commentSpan = document.createElement('span');
+  let timestampDiv = document.createElement('div');
+
+  emailSpan.classList.add('nicknameText');
+  emailCommentDiv.classList.add('commentText');
+  timestampDiv.classList.add('timestampText')
+
+  emailSpan.innerText = comment.email + ': ';
+  commentSpan.innerText = comment.comment;
+  var date = new Date(comment.timestamp);
+  timestampDiv.innerText = date.toString();
+
+  commentElement.appendChild(timestampDiv);
+  emailCommentDiv.appendChild(emailSpan);
+  emailCommentDiv.appendChild(commentSpan);
+  commentElement.appendChild(emailCommentDiv);
+
+  if (comment.blobKey !== 'noBlob') {
+    let image = document.createElement('IMG');
+    image.setAttribute('src', comment.url);
+    image.classList.add('commentImage')
+    image.style.maxHeight = '200px';
+
+    commentElement.appendChild(image);
+  }
+
+  return commentElement;
+}
+
 function getLogin() {
   fetch('/login').then((response) => response.text()).then((message) => {
     const login = document.getElementById('loginBox');
     login.innerHTML = message;
   });
-}
-
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
 }
 
 function fetchBlobstoreUrlAndShowForm() {
@@ -102,5 +143,3 @@ function fetchBlobstoreUrlAndShowForm() {
         messageForm.classList.remove('hidden');
       });
 }
-
-

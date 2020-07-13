@@ -14,24 +14,31 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.blobstore.BlobInfo;
+import com.google.appengine.api.blobstore.BlobInfoFactory;
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import java.io.*;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ServingUrlOptions;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/blobstore")
-public class BlobstoreServlet extends HttpServlet {
+/**
+ * When the user submits the form, Blobstore processes the file upload and then forwards the request
+ * to this servlet. This servlet then returns the image fetched from Blobstore.
+ */
+@WebServlet("/getBlob")
+public class GetBlobServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    String uploadUrl = blobstoreService.createUploadUrl("/data");
+    BlobKey blobKey = new BlobKey(request.getParameter("blobKey"));
 
-    response.setContentType("text/html");
-    response.getWriter().println(uploadUrl);
+    blobstoreService.serve(blobKey, response);
   }
 }
