@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import java.io.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +29,7 @@ public class BlobstoreServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    String uploadUrl = blobstoreService.createUploadUrl("/form-handler");
+    String uploadUrl = blobstoreService.createUploadUrl("/data");
 
     response.setContentType("text/html");
     response.getWriter().println(uploadUrl);

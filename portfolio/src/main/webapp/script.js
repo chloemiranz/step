@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 function addRandomGreeting() {
   const greetings = [
     'I am 20 years old',
@@ -19,29 +20,39 @@ function addRandomGreeting() {
     'My favorite band is Pink Floyd',
     'I am half Persian',
   ];
+
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+
 function randomizeImage() {
   const imageIndex = Math.floor(Math.random() * 7) + 1;
   const imgUrl = 'images/IMG_' + imageIndex + '.jpeg';
+
   const imgElement = document.createElement('img');
   imgElement.src = imgUrl;
+
   const imageContainer = document.getElementById('random-image-container');
+
   imageContainer.innerHTML = '';
   imageContainer.appendChild(imgElement);
 }
+
 function showFrame() {
   document.getElementById('showiFrame').innerHTML =
-      '<iframe src="https://open.spotify.com/embed/track/1bSpwPhAxZwlR2enJJsv7U" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media" ></iframe>';
+      '<iframe src="https://open.spotify.com/embed/track/1bSpwPhAxZwlR2enJJsv7U" width="100%" height="300px" frameborder="0" allowtransparency="true" allow="encrypted-media" ></iframe>';
 }
+
 function getComments() {
   fetch('/login').then((response) => response.text()).then((message) => {
     const firstLine = message.split('\n')[0];
-    if (firstLine == 'You are logged in!') {
+    if (firstLine == 'You are logged in! ') {
       document.getElementById('commentBox').classList.add('show');
       document.getElementById('commentBox').classList.remove('hide');
+
       fetch('/data').then((response) => response.json()).then((comments) => {
         const commentsList = document.getElementById('comments-container');
         commentsList.innerHTML = '';
@@ -54,11 +65,25 @@ function getComments() {
         if (max == 'all') {
           max = (comments.length);
         }
-        console.log(comments);
-        for (let i = 0; i < comments.length; i++) {
-          const commentObj = comments[i].email + ': \n' + comments[i].comment;
-          commentsList.append(createListElement(commentObj));
+
+        const fetches = [];
+
+        for (let i = 0; i < max; i++) {
+          if (comments[i].hasOwnProperty('blobKey') &&
+              comments[i].blobKey !== 'noBlob') {
+            fetches.push(fetch('/getBlob?blobKey=' + comments[i].blobKey)
+                .then((imgBlob) => {
+                  comments[i].url = imgBlob.url;
+                }));
+          }
         }
+
+        Promise.all(fetches).then(() => {
+          for (let i = 0; i < max; i++) {
+            console.log(comments[i]);
+            commentsList.append(createCommentElement(comments[i]));
+          }
+        });
       });
     } else {
       document.getElementById('commentBox').classList.add('hide');
@@ -66,17 +91,45 @@ function getComments() {
     }
   });
 }
+
+function createCommentElement(comment) {
+  const commentElement = document.createElement('li');
+  const emailCommentDiv = document.createElement('div');
+  const emailSpan = document.createElement('span');
+  const commentSpan = document.createElement('span');
+  const timestampDiv = document.createElement('div');
+
+  emailSpan.classList.add('nicknameText');
+  emailCommentDiv.classList.add('commentText');
+  timestampDiv.classList.add('timestampText');
+
+  emailSpan.innerText = comment.email + ': ';
+  commentSpan.innerText = comment.comment;
+  const date = new Date(comment.timestamp);
+  timestampDiv.innerText = date.toString();
+
+  commentElement.appendChild(timestampDiv);
+  emailCommentDiv.appendChild(emailSpan);
+  emailCommentDiv.appendChild(commentSpan);
+  commentElement.appendChild(emailCommentDiv);
+
+  if (comment.blobKey !== 'noBlob') {
+    const image = document.createElement('IMG');
+    image.setAttribute('src', comment.url);
+    image.classList.add('commentImage');
+    image.style.maxHeight = '200px';
+
+    commentElement.appendChild(image);
+  }
+
+  return commentElement;
+}
+
 function getLogin() {
   fetch('/login').then((response) => response.text()).then((message) => {
     const login = document.getElementById('loginBox');
     login.innerHTML = message;
   });
-}
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  
-return liElement;
 }
 
 function fetchBlobstoreUrlAndShowForm() {

@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,10 +28,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * When the user submits the form, Blobstore processes the file upload and then forwards the request
- * to this servlet. This servlet then returns the image fetched from Blobstore.
- */
 @WebServlet("/getBlob")
 public class GetBlobServlet extends HttpServlet {
   @Override
