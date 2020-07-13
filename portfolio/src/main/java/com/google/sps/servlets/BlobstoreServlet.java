@@ -16,7 +16,6 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import java.io.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
@@ -29,7 +28,7 @@ public class BlobstoreServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    String uploadUrl = blobstoreService.createUploadUrl("/data");
+    String uploadUrl = blobstoreService.createUploadUrl("/form-handler");
 
     response.setContentType("text/html");
     response.getWriter().println(uploadUrl);
