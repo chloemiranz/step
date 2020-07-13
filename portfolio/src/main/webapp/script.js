@@ -69,10 +69,12 @@ function getComments() {
         const fetches = [];
 
         for (let i = 0; i < max; i++) {
-          if (comments[i].hasOwnProperty('blobKey') && comments[i].blobKey !== 'noBlob') {
-            fetches.push(fetch('/getBlob?blobKey=' + comments[i].blobKey).then((imgBlob) => {
+          if (comments[i].hasOwnProperty('blobKey') &&
+              comments[i].blobKey !== 'noBlob') {
+            fetches.push(fetch('/getBlob?blobKey=' + comments[i].blobKey)
+                .then((imgBlob) => {
                   comments[i].url = imgBlob.url;
-            }));
+                }));
           }
         }
 
@@ -83,8 +85,7 @@ function getComments() {
           }
         });
       });
-    }
-    else {
+    } else {
       document.getElementById('commentBox').classList.add('hide');
       document.getElementById('commentBox').classList.remove('show');
     }

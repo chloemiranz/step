@@ -9,7 +9,8 @@
     "void-style": "off",
     "element-name": "off",
     "attribute-allowed-values": "off",
-    "no-unused-vars": "off"
+    "no-unused-vars": "off",
+    "prefer-button": "off"
   }
 
   
