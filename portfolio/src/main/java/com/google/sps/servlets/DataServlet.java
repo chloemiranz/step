@@ -61,14 +61,14 @@ public class DataServlet extends HttpServlet {
 
     for (Entity entity : commentResults.asList(FetchOptions.Builder.withDefaults())) {
       long id = entity.getKey().getId();
-      String comment = (String) entity.getProperty("comment");
+      String text = (String) entity.getProperty("comment");
       String email = (String) entity.getProperty("email");
       String blobKeyStr = (String) entity.getProperty("blobKey");
       long timestamp = (long) entity.getProperty("timestamp");
 
-      Comment commentObj = new Comment(email, comment, blobKeyStr, timestamp);
+      Comment comment = new Comment(email, text, blobKeyStr, timestamp);
 
-      data.add(commentObj);
+      data.add(comment);
     }
 
     Gson gson = new Gson();
@@ -85,8 +85,8 @@ public class DataServlet extends HttpServlet {
     entity.setProperty("comment", comment);
     entity.setProperty("timestamp", System.currentTimeMillis());
 
-    String blobKeyString = getBlobKeyString(request, "image");
-    entity.setProperty("blobKey", blobKeyString);
+    String blobKey = (String) getBlobKeyString(request, "image");
+    entity.setProperty("blobKey", blobKey);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(entity);
@@ -119,7 +119,9 @@ public class DataServlet extends HttpServlet {
       return noBlob;
     }
 
-    String foundKey = blobKeys.get(0).getKeyString();
+    String foundKey = (String) blobKey.getKeyString();
+    System.out.println(blobKey.getKeyString().getClass());
+    System.out.println(foundKey.getClass());
     return foundKey;
   }
 }

@@ -7,17 +7,14 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <div id="loginBox">
+    <div id="login-box">
       <br />
-      <script>
-        getLogin()
-      </script>
     </div>
-    <div class="headerBox">
+    <div class="header-box">
       <div class="information">
-        <h1>Chloe <span class="pinkText">Miranz</span></h1>
+        <h1>Chloe <span class="pink-text">Miranz</span></h1>
         <div class="subheader">
-          I am a sophomore at UC Santa Cruz and I live in Palo Alto. My background is French is Persian. My hobbies
+          I am a sophomore at UC Santa Cruz and I live in Palo Alto. My background is French and Persian. My hobbies
           include reading, playing piano, and painting. I am currently interested in full-stack web development, but I
           am also looking forward to venturing into other fields of software engineering.
         </div>
@@ -26,51 +23,46 @@
           <a href="https://www.linkedin.com/in/chloe-miranz-bb0806102">Linkedin</a>
         </div>
       </div>
-      <img src="images/IMG_me.jpeg" alt="Picture of me" class="profilePic" />
+      <img src="images/IMG_me.jpeg" alt="Picture of me" class="profile-pic" />
     </div>
     <br />
     <br />
-    <div id="infoSection">
-      <div class="infoSectionText">Some things about me</div>
-      <div class="infoBoxes">
-        <div id="factBox" class="infoBox">
+    <div id="info-section">
+      <div class="info-section-text">Some things about me</div>
+      <div class="info-boxes">
+        <div id="fact-box" class="info-box">
           <p1>Click here to get a random fact about me:</p1>
           <br />
           <button class="button" type="submit" onclick="addRandomGreeting();">Here</button>
           <div id="greeting-container"></div>
         </div>
-        <div id="dogBox" class="infoBox">
+        <div id="dog-box" class="info-box">
           <p1>Click here to see a random photo of my dog:</p1>
           <br />
-          <button
-            class="button"
-            type="submit"
-            onclick="randomizeImage();document.getElementById('dogBox').style.height = 'auto';"
-          >
-            Here
-          </button>
+          <button class="button" type="submit" onclick="randomizeImage();">Here</button>
           <div id="random-image-container"></div>
         </div>
-        <div id="songBox" class="infoBox">
+        <div id="song-box" class="info-box">
           <p1>Click here to hear a snippet of one of my favorite songs:</p1>
           <br />
-          <button
-            class="button"
-            type="submit"
-            onclick="showFrame();document.getElementById('songBox').style.height = 'auto';"
-          >
-            Here
-          </button>
+          <button class="button" type="submit" onclick="showFrame()">Here</button>
           <div id="showiFrame"></div>
         </div>
       </div>
     </div>
-    <div id="commentBox">
-      <div class="commentBoxText">Comments</div>
+    <div id="comment-box">
+      <div class="comment-box-text">Comments</div>
+      <button type="submit" onclick="deleteComments()">Delete All Comments</button>
       <form id="my-form" class="hidden" method="POST" enctype="multipart/form-data">
-        <p>Enter your email:</p>
-        <textarea name="email-input">Email</textarea>
+        <div class="form-label">Enter your email:</div>
+        <input class="form-input" type="email" name="email-input" placeholder="Email" required />
         <br />
+        <div class="form-label">Enter a comment:</div>
+        <input class="form-input" type="text" name="text-input" placeholder="Comment" required />
+        <br />
+        <div class="form-label">Upload an image:</div>
+        <input type="file" name="image" />
+        <button type="submit">Submit</button>
         <p>Enter the maximum number of comments you want to show:</p>
         <select name="numbers" id="max" onchange="getComments()">
           <option value="all">all</option>
@@ -80,19 +72,9 @@
           <option value="50">50</option>
         </select>
         <br />
-        <p>Enter a comment:</p>
-        <textarea name="text-input">comment</textarea>
-        <br />
-        <p>Upload an image:</p>
-        <input type="file" name="image" />
-        <button type="submit">Submit</button>
-        <div class="commentsScrollBox">
+        <div class="comments-scroll-box">
           <ul id="comments-container"></ul>
         </div>
-        <script>
-          getComments()
-          fetchBlobstoreUrlAndShowForm()
-        </script>
       </form>
     </div>
   </body>

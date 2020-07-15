@@ -12,7 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-function addRandomGreeting() {
+window.onload =
+    function() {
+      getLogin();
+      getComments();
+      fetchBlobstoreUrlAndShowForm();
+    };
+
+function
+addRandomGreeting() {
   const greetings = [
     'I am 20 years old',
     'My first language is French',
@@ -28,7 +36,8 @@ function addRandomGreeting() {
 }
 
 
-function randomizeImage() {
+function
+randomizeImage() {
   const imageIndex = Math.floor(Math.random() * 7) + 1;
   const imgUrl = 'images/IMG_' + imageIndex + '.jpeg';
 
@@ -39,58 +48,61 @@ function randomizeImage() {
 
   imageContainer.innerHTML = '';
   imageContainer.appendChild(imgElement);
+  document.getElementById('dog-box').style.height = 'auto';
 }
 
-function showFrame() {
+function
+showFrame() {
   document.getElementById('showiFrame').innerHTML =
       '<iframe src="https://open.spotify.com/embed/track/1bSpwPhAxZwlR2enJJsv7U" width="100%" height="300px" frameborder="0" allowtransparency="true" allow="encrypted-media" ></iframe>';
+  document.getElementById('song-box').style.height = 'auto';
 }
 
-function getComments() {
-  fetch('/login').then((response) => response.text()).then((message) => {
-    const firstLine = message.split('\n')[0];
-    if (firstLine == 'You are logged in! ') {
-      document.getElementById('commentBox').classList.add('show');
-      document.getElementById('commentBox').classList.remove('hide');
-
-      fetch('/data').then((response) => response.json()).then((comments) => {
-        const commentsList = document.getElementById('comments-container');
-        commentsList.innerHTML = '';
-        const maxInput = document.getElementById('max').value;
-        console.log('maxInput: ', maxInput);
-        const paramInput = 'max='.concat(maxInput);
-        console.log(paramInput);
-        const params = new URLSearchParams(paramInput);
-        let max = params.get('max');
-        if (max == 'all') {
-          max = (comments.length);
+function
+getComments() {
+  fetch('/login')
+      .then((response) => {
+        if (!response.ok) {
+          document.getElementById('comment-box').classList.add('hide');
+          document.getElementById('comment-box').classList.remove('show');
+          throw new Error('Network response was not ok');
         }
+        return response.text();
+      })
+      .then((message) => {
+        document.getElementById('comment-box').classList.add('show');
+        document.getElementById('comment-box').classList.remove('hide');
 
-        const fetches = [];
-
-        for (let i = 0; i < max; i++) {
-          if (comments[i].hasOwnProperty('blobKey') &&
-              comments[i].blobKey !== 'noBlob') {
-            fetches.push(fetch('/getBlob?blobKey=' + comments[i].blobKey)
-                .then((imgBlob) => {
-                  comments[i].url = imgBlob.url;
-                }));
+        fetch('/data').then((response) => response.json()).then((comments) => {
+          const commentsList = document.getElementById('comments-container');
+          commentsList.innerHTML = '';
+          const maxInput = document.getElementById('max').value;
+          const paramInput = 'max='.concat(maxInput);
+          const params = new URLSearchParams(paramInput);
+          let max = params.get('max');
+          if (max == 'all' || max > comments.length) {
+            max = comments.length;
           }
-        }
-
-        Promise.all(fetches).then(() => {
+          const fetches = [];
           for (let i = 0; i < max; i++) {
-            console.log(comments[i]);
-            commentsList.append(createCommentElement(comments[i]));
+            if (comments[i].hasOwnProperty('blobKey') &&
+                comments[i].blobKey !== 'noBlob') {
+              fetches.push(fetch('/getBlob?blobKey=' + comments[i].blobKey)
+                  .then((imgBlob) => {
+                    comments[i].url = imgBlob.url;
+                  }));
+            }
           }
+          Promise.all(fetches).then(() => {
+            for (let i = 0; i < max; i++) {
+              console.log(comments[i]);
+              commentsList.append(createCommentElement(comments[i]));
+            }
+          });
         });
       });
-    } else {
-      document.getElementById('commentBox').classList.add('hide');
-      document.getElementById('commentBox').classList.remove('show');
-    }
-  });
 }
+
 
 function createCommentElement(comment) {
   const commentElement = document.createElement('li');
@@ -99,9 +111,9 @@ function createCommentElement(comment) {
   const commentSpan = document.createElement('span');
   const timestampDiv = document.createElement('div');
 
-  emailSpan.classList.add('nicknameText');
-  emailCommentDiv.classList.add('commentText');
-  timestampDiv.classList.add('timestampText');
+  emailSpan.classList.add('nickname-text');
+  emailCommentDiv.classList.add('comment-text');
+  timestampDiv.classList.add('timestamp-text');
 
   emailSpan.innerText = comment.email + ': ';
   commentSpan.innerText = comment.comment;
@@ -116,8 +128,7 @@ function createCommentElement(comment) {
   if (comment.blobKey !== 'noBlob') {
     const image = document.createElement('IMG');
     image.setAttribute('src', comment.url);
-    image.classList.add('commentImage');
-    image.style.maxHeight = '200px';
+    image.classList.add('comment-image');
 
     commentElement.appendChild(image);
   }
@@ -125,14 +136,16 @@ function createCommentElement(comment) {
   return commentElement;
 }
 
-function getLogin() {
+function
+getLogin() {
   fetch('/login').then((response) => response.text()).then((message) => {
-    const login = document.getElementById('loginBox');
+    const login = document.getElementById('login-box');
     login.innerHTML = message;
   });
 }
 
-function fetchBlobstoreUrlAndShowForm() {
+function
+fetchBlobstoreUrlAndShowForm() {
   fetch('/blobstore')
       .then((response) => {
         return response.text();
@@ -142,4 +155,11 @@ function fetchBlobstoreUrlAndShowForm() {
         messageForm.action = imageUploadUrl;
         messageForm.classList.remove('hidden');
       });
+}
+
+function
+deleteComments() {
+  fetch('/delete-data', {method: 'POST'}).then((response) => {
+    getComments();
+  });
 }
