@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-window.onload =
-    function() {
-      getLogin();
-      getComments();
-      fetchBlobstoreUrlAndShowForm();
-    };
+window.onload = function() {
+  getLogin();
+  getComments();
+  fetchBlobstoreUrlAndShowForm();
+};
 
-function
-addRandomGreeting() {
+function addRandomGreeting() {
   const greetings = [
     'I am 20 years old',
     'My first language is French',
@@ -36,8 +34,7 @@ addRandomGreeting() {
 }
 
 
-function
-randomizeImage() {
+function randomizeImage() {
   const imageIndex = Math.floor(Math.random() * 7) + 1;
   const imgUrl = 'images/IMG_' + imageIndex + '.jpeg';
 
@@ -51,15 +48,13 @@ randomizeImage() {
   document.getElementById('dog-box').style.height = 'auto';
 }
 
-function
-showFrame() {
+function showFrame() {
   document.getElementById('showiFrame').innerHTML =
       '<iframe src="https://open.spotify.com/embed/track/1bSpwPhAxZwlR2enJJsv7U" width="100%" height="300px" frameborder="0" allowtransparency="true" allow="encrypted-media" ></iframe>';
   document.getElementById('song-box').style.height = 'auto';
 }
 
-function
-getComments() {
+function getComments() {
   fetch('/login')
       .then((response) => {
         if (!response.ok) {
@@ -136,16 +131,14 @@ function createCommentElement(comment) {
   return commentElement;
 }
 
-function
-getLogin() {
+function getLogin() {
   fetch('/login').then((response) => response.text()).then((message) => {
     const login = document.getElementById('login-box');
     login.innerHTML = message;
   });
 }
 
-function
-fetchBlobstoreUrlAndShowForm() {
+function fetchBlobstoreUrlAndShowForm() {
   fetch('/blobstore')
       .then((response) => {
         return response.text();
@@ -157,8 +150,7 @@ fetchBlobstoreUrlAndShowForm() {
       });
 }
 
-function
-deleteComments() {
+function deleteComments() {
   fetch('/delete-data', {method: 'POST'}).then((response) => {
     getComments();
   });

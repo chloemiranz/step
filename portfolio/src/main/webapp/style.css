@@ -4,7 +4,7 @@ body {
   font-weight: 300;
 }
 
-#loginBox {
+#login-box {
   width: 70%;
   margin-top: 50px;
   display: inline-block;
@@ -14,7 +14,7 @@ body {
   padding-right: 15%;
 }
 
-.headerBox {
+.header-box {
   margin-top: 50px;
   display: flex;
   flex-direction: row;
@@ -24,12 +24,12 @@ body {
   padding-right: 15%;
 }
 
-.profilePic {
+.profile-pic {
   margin-left: 15%;
   height: 400px;
   border-radius: 15px;
-  -webkit-box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
   box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
 }
 
@@ -38,7 +38,7 @@ h1 {
   font-weight: 700;
 }
 
-.pinkText {
+.pink-text {
   color: pink;
 }
 
@@ -63,7 +63,7 @@ a {
   color: pink;
 }
 
-#infoSection {
+#info-section {
   margin-bottom: 50px;
   padding-top: 50px;
   padding-bottom: 50px;
@@ -72,20 +72,20 @@ a {
   background-color: pink;
 }
 
-.infoSectionText {
+.info-section-text {
   font-size: 25px;
   font-weight: 700;
   color: white;
 }
 
-.infoBoxes {
+.info-boxes {
   margin-top: 25px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.infoBox {
+.info-box {
   width: 27%;
   background-color: white;
   border-radius: 10px;
@@ -94,8 +94,8 @@ a {
   padding-right: 25px;
   padding-top: 25px;
   padding-bottom: 25px;
-  -webkit-box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
   box-shadow: 3px 3px 33px -16px rgba(0, 0, 0, 0.75);
 }
 
@@ -112,16 +112,16 @@ a {
   background-color: pink;
   border: none;
   border-radius: 15px;
-  box-shadow: 0 3px #999;
+  box-shadow: 0 4px #999;
 }
 
 .button:hover {
-  background-color: #3e8e41;
+  background-color: maroon;
 }
 
 .button:active {
-  background-color: #3e8e41;
-  box-shadow: 0 5px #666;
+  background-color: maroon;
+  box-shadow: 0 2px #666;
   transform: translateY(4px);
 }
 
@@ -139,19 +139,19 @@ a {
   margin-top: 25px;
 }
 
-.commentBoxText {
+.comment-box-text {
   font-size: 25px;
   font-weight: 700;
 }
 
-#commentBox {
+#comment-box {
   position: relative;
   padding-left: 15%;
   padding-right: 15%;
   text-align: left;
 }
 
-.commentsScrollBox {
+.comments-scroll-box {
   margin-top: 35px;
   background: pink;
   padding: 25px;
@@ -159,6 +159,23 @@ a {
   overflow: scroll;
   margin-bottom: 100px;
   border-radius: 15px;
+}
+
+#my-form {
+  margin-top: 10px;
+}
+
+.form-label {
+  margin-top: 15px;
+}
+
+.form-input {
+  width: 40%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid lightgray;
+  outline: none;
 }
 
 .show {
@@ -183,20 +200,21 @@ ul li {
   border-radius: 10px;
 }
 
-.timestampText {
+.timestamp-text {
   font-size: 14px;
   opacity: 0.5;
 }
 
-.nicknameText {
+.nickname-text {
   font-weight: 700;
 }
 
-.commentText {
+.comment-text {
   margin-top: 10px;
-  margin-bottom: 20px;
 }
 
-.commentImg {
+.comment-image {
+  margin-top: 20px;
   max-height: 200px;
+  max-width: 100%;
 }
