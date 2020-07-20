@@ -81,7 +81,7 @@ function getComments() {
           const fetches = [];
           for (let i = 0; i < max; i++) {
             if (comments[i].hasOwnProperty('blobKey') &&
-                comments[i].blobKey !== 'noBlob') {
+            comments[i].blobKey !== 'noBlob') {
               fetches.push(fetch('/getBlob?blobKey=' + comments[i].blobKey)
                   .then((imgBlob) => {
                     comments[i].url = imgBlob.url;
