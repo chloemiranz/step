@@ -29,8 +29,8 @@ jobs:
       if: always()
       run: node_modules/prettier/bin-prettier.js -c portfolio/src/main/webapp/*.css
     - name: Check JavaScript Formatting
-      #if: always()
-      #run: diff -u <(cat portfolio/src/main/webapp/*.js) <(node_modules/clang-format/bin/linux_x64/clang-format --style=Google portfolio/src/main/webapp/*.js)
+      if: always()
+      run: diff -u <(cat portfolio/src/main/webapp/*.js) <(node_modules/clang-format/bin/linux_x64/clang-format --style=Google portfolio/src/main/webapp/*.js)
     - name: Check Java Formatting
       if: always()
       run: diff -u <(cat portfolio/src/main/java/com/google/sps/servlets/*.java) <(node_modules/clang-format/bin/linux_x64/clang-format --style=Google portfolio/src/main/java/com/google/sps/servlets/*.java)
