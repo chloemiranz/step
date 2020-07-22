@@ -13,6 +13,7 @@
 // limitations under the License.
 
 window.onload = function() {
+  showLogin();
   getLogin();
   getComments();
   fetchBlobstoreUrlAndShowForm();
@@ -55,6 +56,46 @@ function showFrame() {
 }
 
 function getComments() {
+  myFetch();
+}
+
+async function myFetch() {
+  const comments = await fetch('/data').then((response) => response.json());
+  const commentsList = document.getElementById('comments-container');
+  commentsList.innerHTML = '';
+  const maxInput = document.getElementById('max').value;
+  const paramInput = 'max='.concat(maxInput);
+  const params = new URLSearchParams(paramInput);
+  let max = params.get('max');
+  if (max == 'all' || max > comments.length) {
+    max = comments.length;
+  }
+  const fetches = [];
+  for (let i = 0; i < max; i++) {
+    if (comments[i].hasOwnProperty('blobKey') &&
+        comments[i].blobKey !== 'noBlob') {
+      fetches.push(
+          fetch('/getBlob?blobKey=' + comments[i].blobKey).then((imgBlob) => {
+            comments[i].url = imgBlob.url;
+          }));
+    }
+  }
+  Promise.all(fetches).then(() => {
+    for (let i = 0; i < max; i++) {
+      console.log(comments[i]);
+      commentsList.append(createCommentElement(comments[i]));
+    }
+  });
+}
+
+function showLogin() {
+  fetch('/login').then((response) => response.text()).then((message) => {
+    const login = document.getElementById('login-box');
+    login.innerHTML = message;
+  });
+}
+
+function getLogin() {
   fetch('/login')
       .then((response) => {
         if (!response.ok) {
@@ -67,37 +108,8 @@ function getComments() {
       .then((message) => {
         document.getElementById('comment-box').classList.add('show');
         document.getElementById('comment-box').classList.remove('hide');
-
-        fetch('/data').then((response) => response.json()).then((comments) => {
-          const commentsList = document.getElementById('comments-container');
-          commentsList.innerHTML = '';
-          const maxInput = document.getElementById('max').value;
-          const paramInput = 'max='.concat(maxInput);
-          const params = new URLSearchParams(paramInput);
-          let max = params.get('max');
-          if (max == 'all' || max > comments.length) {
-            max = comments.length;
-          }
-          const fetches = [];
-          for (let i = 0; i < max; i++) {
-            if (comments[i].hasOwnProperty('blobKey') &&
-                comments[i].blobKey !== 'noBlob') {
-              fetches.push(fetch('/getBlob?blobKey=' + comments[i].blobKey)
-                  .then((imgBlob) => {
-                    comments[i].url = imgBlob.url;
-                  }));
-            }
-          }
-          Promise.all(fetches).then(() => {
-            for (let i = 0; i < max; i++) {
-              console.log(comments[i]);
-              commentsList.append(createCommentElement(comments[i]));
-            }
-          });
-        });
       });
 }
-
 
 function createCommentElement(comment) {
   const commentElement = document.createElement('li');
@@ -129,13 +141,6 @@ function createCommentElement(comment) {
   }
 
   return commentElement;
-}
-
-function getLogin() {
-  fetch('/login').then((response) => response.text()).then((message) => {
-    const login = document.getElementById('login-box');
-    login.innerHTML = message;
-  });
 }
 
 function fetchBlobstoreUrlAndShowForm() {
