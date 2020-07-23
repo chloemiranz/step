@@ -13,7 +13,6 @@
 // limitations under the License.
 
 window.onload = function() {
-  showLogin();
   getLogin();
   getCommentsAsync();
   fetchBlobstoreUrlAndShowForm();
@@ -82,33 +81,26 @@ async function myFetch() {
   }
   Promise.all(fetches).then(() => {
     for (let i = 0; i < max; i++) {
-      console.log(comments[i]);
       commentsList.append(createCommentElement(comments[i]));
     }
   });
 }
 
-function showLogin() {
-  fetch('/login').then((response) => response.text()).then((message) => {
-    const login = document.getElementById('login-box');
-    login.innerHTML = message;
-  });
-}
-
 function getLogin() {
-  fetch('/login')
-      .then((response) => {
-        if (!response.ok) {
-          document.getElementById('comment-box').classList.add('hide');
-          document.getElementById('comment-box').classList.remove('show');
-          throw new Error('Network response was not ok');
-        }
-        return response.text();
-      })
-      .then((message) => {
-        document.getElementById('comment-box').classList.add('show');
-        document.getElementById('comment-box').classList.remove('hide');
-      });
+  fetch('/login').then((response) => {
+    response.text().then(function(text) {
+      const login = document.getElementById('login-box');
+      login.innerHTML = text;
+    });
+    if (!response.ok) {
+      document.getElementById('comment-box').classList.add('hide');
+      document.getElementById('comment-box').classList.remove('show');
+      throw new Error('Network response was not ok');
+    } else {
+      document.getElementById('comment-box').classList.add('show');
+      document.getElementById('comment-box').classList.remove('hide');
+    }
+  });
 }
 
 function createCommentElement(comment) {
