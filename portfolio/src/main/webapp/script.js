@@ -14,7 +14,7 @@
 
 window.onload = function() {
   getLogin();
-  getCommentsAsync();
+  getComments();
   fetchBlobstoreUrlAndShowForm();
 };
 
@@ -54,11 +54,11 @@ function showFrame() {
   document.getElementById('song-box').style.height = 'auto';
 }
 
-function getCommentsAsync() {
-  myFetch();
+function getComments() {
+  getCommentsAsync();
 }
 
-async function myFetch() {
+async function getCommentsAsync() {
   const comments = await fetch('/data').then((response) => response.json());
   const commentsList = document.getElementById('comments-container');
   commentsList.innerHTML = '';
