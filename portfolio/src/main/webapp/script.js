@@ -15,7 +15,7 @@
 window.onload = function() {
   showLogin();
   getLogin();
-  getComments();
+  getCommentsAsync();
   fetchBlobstoreUrlAndShowForm();
 };
 
@@ -55,7 +55,7 @@ function showFrame() {
   document.getElementById('song-box').style.height = 'auto';
 }
 
-function getComments() {
+function getCommentsAsync() {
   myFetch();
 }
 
@@ -157,6 +157,6 @@ function fetchBlobstoreUrlAndShowForm() {
 
 function deleteComments() {
   fetch('/delete-data', {method: 'POST'}).then((response) => {
-    getComments();
+    getCommentsAsync();
   });
 }
