@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,10 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+window.onload = function() {
+  getLogin();
+  getComments();
+  fetchBlobstoreUrlAndShowForm();
+};
+
 function addRandomGreeting() {
   const greetings = [
-    'I am 20 years old', 'My first language is French', 'I have a sister',
-    'My favorite band is Pink Floyd', 'I am half Persian',
+    'I am 20 years old',
+    'My first language is French',
+    'I have a sister',
+    'My favorite band is Pink Floyd',
+    'I am half Persian',
   ];
 
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -36,54 +45,110 @@ function randomizeImage() {
 
   imageContainer.innerHTML = '';
   imageContainer.appendChild(imgElement);
+  document.getElementById('dog-box').style.height = 'auto';
 }
 
 function showFrame() {
   document.getElementById('showiFrame').innerHTML =
-      '<iframe src="https://open.spotify.com/embed/track/1bSpwPhAxZwlR2enJJsv7U" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media" ></iframe>';
+      '<iframe src="https://open.spotify.com/embed/track/1bSpwPhAxZwlR2enJJsv7U" width="100%" height="300px" frameborder="0" allowtransparency="true" allow="encrypted-media" ></iframe>';
+  document.getElementById('song-box').style.height = 'auto';
 }
 
 function getComments() {
-  fetch('/login').then((response) => response.text()).then((message) => {
-    const firstLine = message.split('\n')[0];
-    if (firstLine == 'You are logged in!') {
-      document.getElementById('commentBox').classList.add('show');
-      document.getElementById('commentBox').classList.remove('hide');
+  getCommentsAsync();
+}
 
-      fetch('/data').then((response) => response.json()).then((comments) => {
-        const commentsList = document.getElementById('comments-container');
-        commentsList.innerHTML = '';
-        const maxInput = document.getElementById('max').value;
-        console.log('maxInput: ', maxInput);
-        const paramInput = 'max='.concat(maxInput);
-        console.log(paramInput);
-        const params = new URLSearchParams(paramInput);
-        let max = params.get('max');
-        if (max == 'all') {
-          max = (comments.length);
-        }
-        console.log(comments);
-        for (let i = 0; i < comments.length; i++) {
-          const commentObj = comments[i].email + ': \n' + comments[i].comment;
-          commentsList.append(createListElement(commentObj));
-        }
-      });
-    } else {
-      document.getElementById('commentBox').classList.add('hide');
-      document.getElementById('commentBox').classList.remove('show');
+async function getCommentsAsync() {
+  const comments = await fetch('/data').then((response) => response.json());
+  const commentsList = document.getElementById('comments-container');
+  commentsList.innerHTML = '';
+  const maxInput = document.getElementById('max').value;
+  const paramInput = 'max='.concat(maxInput);
+  const params = new URLSearchParams(paramInput);
+  let max = params.get('max');
+  if (max == 'all' || max > comments.length) {
+    max = comments.length;
+  }
+  const fetches = [];
+  for (let i = 0; i < max; i++) {
+    if (comments[i].hasOwnProperty('blobKey') &&
+        comments[i].blobKey !== 'noBlob') {
+      fetches.push(
+          fetch('/getBlob?blobKey=' + comments[i].blobKey).then((imgBlob) => {
+            comments[i].url = imgBlob.url;
+          }));
+    }
+  }
+  Promise.all(fetches).then(() => {
+    for (let i = 0; i < max; i++) {
+      commentsList.append(createCommentElement(comments[i]));
     }
   });
 }
 
 function getLogin() {
-  fetch('/login').then((response) => response.text()).then((message) => {
-    const login = document.getElementById('loginBox');
-    login.innerHTML = message;
+  fetch('/login').then((response) => {
+    response.text().then(function(text) {
+      const login = document.getElementById('login-box');
+      login.innerHTML = text;
+    });
+    if (!response.ok) {
+      document.getElementById('comment-box').classList.add('hide');
+      document.getElementById('comment-box').classList.remove('show');
+      throw new Error('Network response was not ok');
+    } else {
+      document.getElementById('comment-box').classList.add('show');
+      document.getElementById('comment-box').classList.remove('hide');
+    }
   });
 }
 
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+function createCommentElement(comment) {
+  const commentElement = document.createElement('li');
+  const emailCommentDiv = document.createElement('div');
+  const emailSpan = document.createElement('span');
+  const commentSpan = document.createElement('span');
+  const timestampDiv = document.createElement('div');
+
+  emailSpan.classList.add('nickname-text');
+  emailCommentDiv.classList.add('comment-text');
+  timestampDiv.classList.add('timestamp-text');
+
+  emailSpan.innerText = comment.email + ': ';
+  commentSpan.innerText = comment.comment;
+  const date = new Date(comment.timestamp);
+  timestampDiv.innerText = date.toString();
+
+  commentElement.appendChild(timestampDiv);
+  emailCommentDiv.appendChild(emailSpan);
+  emailCommentDiv.appendChild(commentSpan);
+  commentElement.appendChild(emailCommentDiv);
+
+  if (comment.blobKey !== 'noBlob') {
+    const image = document.createElement('IMG');
+    image.setAttribute('src', comment.url);
+    image.classList.add('comment-image');
+
+    commentElement.appendChild(image);
+  }
+
+  return commentElement;
+}
+
+function fetchBlobstoreUrlAndShowForm() {
+  fetch('/blobstore')
+      .then((response) => {
+        return response.text();
+      })
+      .then((imageUploadUrl) => {
+        const messageForm = document.getElementById('my-form');
+        messageForm.action = imageUploadUrl;
+        messageForm.classList.remove('hidden');
+      });
+}
+
+function deleteComments() {
+  fetch('/delete-data', {method: 'POST'}).then((response) => {
+    getCommentsAsync();
+  });
 }

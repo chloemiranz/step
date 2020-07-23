@@ -10,6 +10,8 @@
   "rules": {
     "no-multi-spaces": "off",
     "require-jsdoc": "off",
-    "valid-jsdoc": "off"
+    "no-unused-vars": ["warn",  { "vars": "local"}],
+    "no-prototype-builtins": "off"
   }
+  
 }

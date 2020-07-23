@@ -2,73 +2,79 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>My Portfolio</title>
+    <title>Chloe Miranz</title>
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script src="script.js"></script>
   </head>
   <body>
-    <div id="content">
-      <div class="headerBox">
-        <h1>Chloe's Portfolio</h1>
-        <p>This is my new portfolio.</p>
-        <img src="images/IMG_me.jpeg" alt="Picture of me" width="200" length="300" />
-        <p>I am a sophomore at UC Santa Cruz and I live in Palo Alto.</p>
-        <p></p>
-        <p>Here is a link to my github:</p>
-        <a href="https://github.com/chloemiranz">Github</a>
-        <p>Here is a link to my Linkedin:</p>
-        <a href="www.linkedin.com/in/chloe-miranz-bb0806102">Linkedin</a>
+    <div id="login-box">
+      <br />
+    </div>
+    <div class="header-box">
+      <div class="information">
+        <h1>Chloe <span class="pink-text">Miranz</span></h1>
+        <div class="subheader">
+          I am a sophomore at UC Santa Cruz and I live in Palo Alto. My background is French and Persian. My hobbies
+          include reading, playing piano, and painting. I am currently interested in full-stack web development, but I
+          am also looking forward to venturing into other fields of software engineering.
+        </div>
+        <div class="links">
+          <a href="https://github.com/chloemiranz">Github</a>
+          <a href="https://www.linkedin.com/in/chloe-miranz-bb0806102">Linkedin</a>
+        </div>
+      </div>
+      <img src="images/IMG_me.jpeg" alt="Picture of me" class="profile-pic" />
+    </div>
+    <br />
+    <br />
+    <div id="info-section">
+      <div class="info-section-text">Some things about me</div>
+      <div class="info-boxes">
+        <div id="fact-box" class="info-box">
+          <p1>Click here to get a random fact about me:</p1>
+          <br />
+          <button class="button" type="submit" onclick="addRandomGreeting();">Here</button>
+          <div id="greeting-container"></div>
+        </div>
+        <div id="dog-box" class="info-box">
+          <p1>Click here to see a random photo of my dog:</p1>
+          <br />
+          <button class="button" type="submit" onclick="randomizeImage();">Here</button>
+          <div id="random-image-container"></div>
+        </div>
+        <div id="song-box" class="info-box">
+          <p1>Click here to hear a snippet of one of my favorite songs:</p1>
+          <br />
+          <button class="button" type="submit" onclick="showFrame()">Here</button>
+          <div id="showiFrame"></div>
+        </div>
       </div>
     </div>
-    <br />
-    <br />
-    <div id="factBox" class="infoBox">
-      <p1>Click here to get a random fact about me:</p1>
-      <button class="button" type = "submit" onclick="addRandomGreeting();">Here</button>
-      <div id="greeting-container"></div>
-    </div>
-    <div id="dogBox" class="infoBox">
-      <p1>Click here to see a random photo of my dog:</p1>
-      <button class="button" type = "submit" onclick="randomizeImage();document.getElementById('dogBox').style.height = 'auto';">
-        Here
-      </button>
-      <div id="random-image-container"></div>
-    </div>
-    <div id="songBox" class="infoBox">
-      <p1>Click here to hear a snippet of one of my favorite songs:</p1>
-      <button class="button" type = "submit"  onclick="showFrame();document.getElementById('songBox').style.height = 'auto';">
-        Here
-      </button>
-      <div id="showiFrame"></div>
-    </div>
-    <div id="loginBox">
-      <br />
-      <script>
-        getLogin()
-      </script>
-    </div>
-    <div id="commentBox">
-      <form action="/data" method="POST">
-        <p>Enter your email:</p>
-        <textarea name="email-input">Email</textarea>
+    <div id="comment-box">
+      <div class="comment-box-text">Comments</div>
+      <button type="submit" onclick="deleteComments()">Delete All Comments</button>
+      <form id="my-form" class="hidden" method="POST" enctype="multipart/form-data">
+        <div class="form-label">Enter your email:</div>
+        <input class="form-input" type="email" name="email-input" placeholder="Email" required />
         <br />
+        <div class="form-label">Enter a comment:</div>
+        <input class="form-input" type="text" name="text-input" placeholder="Comment" required />
+        <br />
+        <div class="form-label">Upload an image:</div>
+        <input type="file" name="image" />
+        <button type="submit">Submit</button>
         <p>Enter the maximum number of comments you want to show:</p>
         <select name="numbers" id="max" onchange="getComments()">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
           <option value="all">all</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
         </select>
         <br />
-        <p>Enter a comment:</p>
-        <textarea name="text-input">comment</textarea>
-        <br />
-        <button type="submit" ></button>
-        <ul id="comments-container"></ul>
-        <script>
-          getComments()
-        </script>
+        <div class="comments-scroll-box">
+          <ul id="comments-container"></ul>
+        </div>
       </form>
     </div>
   </body>
