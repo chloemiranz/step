@@ -32,29 +32,27 @@ public final class FindMeetingQuery {
     
     //no attendees
     if (attendees.isEmpty() && optionalAttendees.isEmpty()) {
-        meetingTimes.add(
+      meetingTimes.add(
           TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY, true));
-        return meetingTimes;
+      return meetingTimes;
     }
  
     //Get taken times
-    List<Event> takenTimes = getTakenTimes(events, attendees);
-    takenTimes = sortTimes(takenTimes);
+    List<TimeRange> takenTimes = getTakenTimes(events, attendees);
  
     //find open times
     int eventStart = TimeRange.START_OF_DAY;
     
-    for (Event event : takenTimes) {
- 
-      if (eventStart + duration <= event.getWhen().start()) {
-        meetingTimes.add(TimeRange.fromStartEnd(eventStart, event.getWhen().start(), false));
- 
-        eventStart = event.getWhen().end();
+    for (TimeRange eventTime : takenTimes) {
 
+      if (eventStart + duration <= eventTime.start()) {
+        meetingTimes.add(TimeRange.fromStartEnd(eventStart, eventTime.start(), false));
+ 
+        eventStart = eventTime.end();
       }
-        //in case of nested events
-        else if (!(eventStart > event.getWhen().end())) {
-            eventStart = event.getWhen().end();
+      //in case of nested events
+      else if (!(eventStart > eventTime.end())) {
+        eventStart = eventTime.end();
       }
     }
  
@@ -65,57 +63,58 @@ public final class FindMeetingQuery {
     }
 
     //Get optional attendees taken times
-    List<Event> optionalTakenTimes = getTakenTimes(events, optionalAttendees);
-    takenTimes.addAll(optionalTakenTimes);
-    takenTimes = sortTimes(takenTimes);
-
+    List<String> allAttendees = new ArrayList<>();
+    allAttendees.addAll(attendees);
+    allAttendees.addAll(optionalAttendees);
+    List<TimeRange> optionalTakenTimes = getTakenTimes(events, allAttendees);
+    
     //repeat for optional
-    if (!optionalAttendees.isEmpty()){
-        eventStart = TimeRange.START_OF_DAY;
-        for (Event event : takenTimes) {
-            if (eventStart + duration <= event.getWhen().start()) {
-                optionalTimes.add(TimeRange.fromStartEnd(eventStart, event.getWhen().start(), false));
-                eventStart = event.getWhen().end();
-            }
-                //in case of nested events
-            else if (!(eventStart > event.getWhen().end())) {
-                eventStart = event.getWhen().end();
-            }
-        }
+    if (optionalAttendees.isEmpty()) {
+      return meetingTimes;
+    } 
 
-        endOfDay = TimeRange.END_OF_DAY - eventStart;
-        if (endOfDay >= duration) {
-            optionalTimes.add(TimeRange.fromStartEnd(eventStart, TimeRange.END_OF_DAY, true));
-        }
+    eventStart = TimeRange.START_OF_DAY;
+    for (TimeRange eventTime : optionalTakenTimes) {
+      if (eventStart + duration <= eventTime.start()) {
+        optionalTimes.add(TimeRange.fromStartEnd(eventStart, eventTime.start(), false));
+        eventStart = eventTime.end();
+      }
+      //in case of nested events
+      else if (!(eventStart > eventTime.end())) {
+        eventStart = eventTime.end();
+      }
+    }
 
-        if (!optionalTimes.isEmpty()){
-        return optionalTimes;
-        }
+    endOfDay = TimeRange.END_OF_DAY - eventStart;
+    if (endOfDay >= duration) {
+      optionalTimes.add(TimeRange.fromStartEnd(eventStart, TimeRange.END_OF_DAY, true));
+    }
+
+    if (!optionalTimes.isEmpty()) {
+      return optionalTimes;
     }
 
     return meetingTimes;
   }
  
-    //unavailable times
-  private List<Event> getTakenTimes(Collection<Event> events, Collection<String> attendees) {
-    List<Event> taken = new ArrayList<>();
-    for (Event event : events) {
+  //unavailable times
+  private List<TimeRange> getTakenTimes(Collection<Event> events, Collection<String> attendees) {
+    List<TimeRange> taken = new ArrayList<>();
+    //sort events
+    List<Event> eventsList = new ArrayList(events);
+    Comparator<Event> compareByStartTime =
+        (Event event1, Event event2) ->
+            TimeRange.ORDER_BY_START.compare(event1.getWhen(), event2.getWhen());
+    Collections.sort(eventsList, compareByStartTime);
+
+    for (Event event : eventsList) {
       for (String attendee : attendees) {
         if (event.getAttendees().contains(attendee)) {
-          taken.add(event);
+          taken.add(event.getWhen());
         }
       }
     }
     return taken;
   }
- 
-  private List<Event> sortTimes(List<Event> events) {
-    Comparator<Event> compareByStartTime =
-        (Event evt1, Event evt2) ->
-            TimeRange.ORDER_BY_START.compare(evt1.getWhen(), evt2.getWhen());
-    Collections.sort(events, compareByStartTime);
-    return events;
-  }
- 
- 
+
 }
