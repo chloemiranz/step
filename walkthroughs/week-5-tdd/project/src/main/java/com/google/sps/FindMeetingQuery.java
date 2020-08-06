@@ -39,28 +39,7 @@ public final class FindMeetingQuery {
  
     //Get taken times
     List<TimeRange> takenTimes = getTakenTimes(events, attendees);
- 
-    //find open times
-    int eventStart = TimeRange.START_OF_DAY;
-    
-    for (TimeRange eventTime : takenTimes) {
-
-      if (eventStart + duration <= eventTime.start()) {
-        meetingTimes.add(TimeRange.fromStartEnd(eventStart, eventTime.start(), false));
- 
-        eventStart = eventTime.end();
-      }
-      //in case of nested events
-      else if (!(eventStart > eventTime.end())) {
-        eventStart = eventTime.end();
-      }
-    }
- 
-    //after unavailable meetings
-    int endOfDay = TimeRange.END_OF_DAY - eventStart;
-    if (endOfDay >= duration) {
-      meetingTimes.add(TimeRange.fromStartEnd(eventStart, TimeRange.END_OF_DAY, true));
-    }
+    meetingTimes = getAvailableTimes(takenTimes, duration);
 
     //Get optional attendees taken times
     List<String> allAttendees = new ArrayList<>();
@@ -73,10 +52,23 @@ public final class FindMeetingQuery {
       return meetingTimes;
     } 
 
-    eventStart = TimeRange.START_OF_DAY;
-    for (TimeRange eventTime : optionalTakenTimes) {
+    optionalTimes = getAvailableTimes(optionalTakenTimes, duration);
+
+    if (!optionalTimes.isEmpty()) {
+      return optionalTimes;
+    }
+
+    return meetingTimes;
+  }
+
+  private Collection<TimeRange> getAvailableTimes(List<TimeRange> takenTimes, long duration) {
+    int eventStart = TimeRange.START_OF_DAY;
+    Collection<TimeRange> possibleTimes = new ArrayList<TimeRange>();
+    
+    for (TimeRange eventTime : takenTimes) {
       if (eventStart + duration <= eventTime.start()) {
-        optionalTimes.add(TimeRange.fromStartEnd(eventStart, eventTime.start(), false));
+        possibleTimes.add(TimeRange.fromStartEnd(eventStart, eventTime.start(), false));
+ 
         eventStart = eventTime.end();
       }
       //in case of nested events
@@ -84,17 +76,13 @@ public final class FindMeetingQuery {
         eventStart = eventTime.end();
       }
     }
-
-    endOfDay = TimeRange.END_OF_DAY - eventStart;
+    //after unavailable meetings
+    int endOfDay = TimeRange.END_OF_DAY - eventStart;
     if (endOfDay >= duration) {
-      optionalTimes.add(TimeRange.fromStartEnd(eventStart, TimeRange.END_OF_DAY, true));
+      possibleTimes.add(TimeRange.fromStartEnd(eventStart, TimeRange.END_OF_DAY, true));
     }
 
-    if (!optionalTimes.isEmpty()) {
-      return optionalTimes;
-    }
-
-    return meetingTimes;
+    return possibleTimes;
   }
  
   //unavailable times
@@ -116,5 +104,4 @@ public final class FindMeetingQuery {
     }
     return taken;
   }
-
 }
